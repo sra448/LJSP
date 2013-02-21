@@ -42,6 +42,20 @@ caddr = function(list) {
   return ((consP(list) && cdr(list) && cdr(cdr(list))) ? car(cdr(cdr(list))) : false);
 };
 
+// map accepts a function and a list to apply the function to
+// the function is the first argument, because we can use to ditch the list (later)
+
+_map = function(fn, list) {
+  var carTemp = car(list),
+      first = (consP(carTemp) ? _map(fn, carTemp) : carTemp),
+      rest = cdr(list);
+
+  return (consP(rest) ?
+    (cons(fn(first), _map(fn, rest))) :
+    (cons(fn(first), fn(rest)))
+  );
+};
+
 // in functional programming there should be no sideeffects
 // so 'if' should return a value instead of doing stuff.
 // a lot of time we have to pass in functions though,
