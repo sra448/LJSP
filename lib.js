@@ -14,8 +14,8 @@ cons = function(car, cdr) {
     return new cons(car, cdr);
   }
 
-  this.car = car;
-  this.cdr = cdr;
+  this.car = car || null;
+  this.cdr = cdr || null;
 };
 
 consP = function(list) {
@@ -23,23 +23,51 @@ consP = function(list) {
 };
 
 car = function(list) {
-  return ((consP(list)) ? list.car : false);
+  return ((consP(list)) ? list.car : null);
 };
 
 cdr = function(list) {
-  return (consP(list) ? list.cdr : false);
+  return (consP(list) ? list.cdr : null);
 };
 
 cadr = function(list) {
-  return ((consP(list) && cdr(list)) ? car(cdr(list)) : false);
+  return ((consP(list) && cdr(list)) ? car(cdr(list)) : null);
 };
 
 cddr = function(list) {
-  return ((consP(list) && consP(cdr(list))) ? cdr(cdr(list)) : false);
+  return ((consP(list) && consP(cdr(list))) ? cdr(cdr(list)) : null);
 };
 
 caddr = function(list) {
-  return ((consP(list) && cdr(list) && cdr(cdr(list))) ? car(cdr(cdr(list))) : false);
+  return ((consP(list) && cdr(list) && cdr(cdr(list))) ? car(cdr(cdr(list))) : null);
+};
+
+// a list is really only syntax sugar on top of cons cells
+// (list("1 2 3")) is equal to (cons(1, (const(2, 3)))
+
+list = function(lstString) {
+  var str = lstString.trim(),
+      firstValue = /^\(/.test(str) ?
+        list(getContentInBrackets(str)) :
+        str.match(/^([^\(\ ]+)/)[1],
+      rest = str.split(consP(firstValue) ? str : firstValue)[1];
+
+  return cons(firstValue, rest !== "" ? list(rest) : null);
+};
+
+// our print function will make testing way more easy
+// it simply beautifies our stuff and returns a string
+
+_print = function(lst) {
+  return "(" + (consP(lst) ?
+    consP(car(lst)) && consP(cdr(lst)) ?
+      _print(car(lst)) + " " + _print(cdr(lst)) :
+      consP(car(lst)) ?
+        _print(car(lst)) + " " + cdr(lst) :
+        consP(cdr(lst)) ?
+          car(lst) + " " + _print(cdr(lst)) :
+          car(lst) + " " + cdr(lst) :
+    "") + ")";
 };
 
 // map accepts a function and a list to apply the function to
