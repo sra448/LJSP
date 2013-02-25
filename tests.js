@@ -22,7 +22,8 @@
   assertEqual('getContentInBrackets returns original string when nothing to extract', getContentInBrackets("1 2 3"), "1 2 3");
 
   // some cons stuff
-  assertEqual('cons(1, 2).inspect() => (1 . 2)', cons(1, 2), "(1 . 2)");
+  assertEqual('_print(cons(1, 2)) => (1 . 2)', _print(cons(1, 2)), "(1 . 2)");
+  assertEqual('_print(list(1, 2)) => (1 2)', _print(list('1, 2')), "(1 2)");
 
 
 })();

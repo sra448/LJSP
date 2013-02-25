@@ -46,28 +46,29 @@ caddr = function(list) {
 // (list("1 2 3")) is equal to (cons(1, (const(2, 3)))
 
 list = function(lstString) {
-  var str = lstString.trim(),
+  var str = lstString.trim().replace(',', ''),
+      subListStr = getContentInBrackets(str),
       firstValue = /^\(/.test(str) ?
-        list(getContentInBrackets(str)) :
+        list(subListStr) :
         str.match(/^([^\(\ ]+)/)[1],
-      rest = str.split(consP(firstValue) ? str : firstValue)[1];
+      rest = str.split(consP(firstValue) ? '(' + subListStr + ')' : firstValue)[1];
 
   return cons(firstValue, rest !== "" ? list(rest) : null);
 };
 
 // our print function will make testing way more easy
-// it simply beautifies our stuff and returns a string
+// it simply turns lists into stringrepresentations of given list
 
-_print = function(lst) {
-  return "(" + (consP(lst) ?
+_print = function(lst, noBrackets) {
+  return (noBrackets ? '' : '(') + (consP(lst) ?
     consP(car(lst)) && consP(cdr(lst)) ?
-      _print(car(lst)) + " " + _print(cdr(lst)) :
+      _print(car(lst)) + " " + _print(cdr(lst), true) :
       consP(car(lst)) ?
-        _print(car(lst)) + " " + cdr(lst) :
+        _print(car(lst)) + (cdr(lst) !== null ? " . " + cdr(lst) : "") :
         consP(cdr(lst)) ?
-          car(lst) + " " + _print(cdr(lst)) :
-          car(lst) + " " + cdr(lst) :
-    "") + ")";
+          car(lst) + " " + _print(cdr(lst), true) :
+          car(lst) + (cdr(lst) !== null ? " . " + cdr(lst) : "") :
+    "") + (noBrackets ? '' : ')');
 };
 
 // map accepts a function and a list to apply the function to
