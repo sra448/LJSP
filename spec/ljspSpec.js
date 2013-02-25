@@ -20,11 +20,11 @@ describe("ljsp", function() {
       expect(cdr(c)).toEqual(null);
     });
 
-    it("can create lists", function() {
+    it("can create lists (linked cons)", function() {
       expect(_print(cons(1, cons(2, cons(3, cons(4)))))).toEqual("(1 2 3 4)");
     });
 
-    it("can create pairs", function() {
+    it("can create pairs (a cons of two primitive datatypes)", function() {
       expect(_print(cons(1, 2))).toEqual("(1 . 2)");
     });
 
