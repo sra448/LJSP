@@ -46,14 +46,14 @@ caddr = function(list) {
 // (list("1 2 3")) is equal to (cons(1, (const(2, 3)))
 
 list = function(lstString) {
-  var str = lstString.trim().replace(',', ''),
+  var str = lstString.trim().replace(',', '').replace(/\'/g, '"'),
       subListStr = getContentInBrackets(str),
       firstValue = /^\(/.test(str) ?
         list(subListStr) :
         str.match(/^([^\(\ ]+)/)[1],
       rest = str.split(consP(firstValue) ? '(' + subListStr + ')' : firstValue)[1];
 
-  return cons(firstValue, rest !== "" ? list(rest) : null);
+  return cons((consP(firstValue) ? firstValue : JSON.parse(firstValue)), rest !== "" ? list(rest) : null);
 };
 
 // our print function will make testing way more easy
