@@ -1,13 +1,12 @@
-describe("ljsp", function() {
-  // flo function library tests
-  // assertEqual('getContentInBrackets("(foo (2 3 (1 ()) (test)) bar) 2 3") => "foo (2 3 (1 ()) (test)) bar"', getContentInBrackets("(foo (2 3 (1 ()) (test)) bar) 2 3"), "foo (2 3 (1 ()) (test)) bar");
-  // assertEqual('getContentInBrackets returns an empty string for empty brackets', getContentInBrackets("()"), "");
-  // assertEqual('getContentInBrackets returns original string when nothing to extract', getContentInBrackets("1 2 3"), "1 2 3");
+describe("ljsp is a simple and stupid project to play with some lisp concepts in javascript", function() {
 
+  describe('the basic construct of lisp is the cons cell', function() {
 
-  describe('cons cells', function() {
+    it('we can create cons cells using the cons (read: construct) function', function() {
+      expect(cons(1, 2)).toEqual(cons(1, 2));
+    });
 
-    it('consist of a car and a cdr', function() {
+    it('they consist of a car (first item) and a cdr (second item) which can be accessed by the car and cdr functions', function() {
       var a = cons(1, 2),
           b = cons(1),
           c = cons();
@@ -20,49 +19,75 @@ describe("ljsp", function() {
       expect(cdr(c)).toEqual(null);
     });
 
-    it("can create lists (linked cons cells)", function() {
-      expect(_print(cons(1, cons(2, cons(3, cons(4)))))).toEqual("(1 2 3 4)");
+    it("put another cons cell into the cdr and you get a list (or linked cons cell)", function() {
+      var myList = cons(1, cons(2, cons(3, cons(4))));
+
+      expect(car(myList)).toEqual(1);
+      expect(cdr(myList)).toEqual(cons(2, cons(3, cons(4))));
     });
 
-    it("can create pairs (a cons of two primitive datatypes)", function() {
-      expect(_print(cons(1, 2))).toEqual("(1 . 2)");
+    it("lists are terminated by null (in the cdr of the last cons cell)", function() {
+      var myList = cons(1, cons(2));
+      expect(cddr(myList)).toEqual(null);
+
+    });
+
+    it("the cddr function returns the cdr of the cdr, cadr the car of the cdr", function() {
+      var myList = cons(1, cons(2, cons(3, cons(4))));
+
+      expect(cadr(myList)).toEqual(2);
+      expect(cddr(myList)).toEqual(cons(3, cons(4)));
+    });
+
+    it("cons cells that dont link to another cons (in the cdr) are considered pairs", function() {
+      expect(cons(1, 2)).toEqual(cons(1, 2));
     });
 
   });
 
-  describe('list', function() {
+  describe('the list function takes a string and turns it into a list', function() {
 
-    it("converts a liststring into linked cons cells", function() {
+    it("it is syntaxtic sugar for not having to write too many conses yourself", function() {
       expect(list("1 2 3 4")).toEqual(cons(1, cons(2, cons(3, cons(4)))));
       expect(list("(10 20 30 40)")).toEqual(cons(10, cons(20, cons(30, cons(40)))));
-      // expect(list("(1 2 3 4)")).toEqual(cons(1, cons(2, cons(3, cons(4)))));
+      expect(list("(1 2 3 4)")).toEqual(cons(1, cons(2, cons(3, cons(4)))));
     });
     
-    it("parses primitive datatypes", function() {
+    it("it parses primitive datatypes the way JSON does", function() {
       expect(list("'1' '2' '3' '4'")).toEqual(cons("1", cons("2", cons("3", cons("4")))));
       expect(list("1 2 3 4")).toEqual(cons(1, cons(2, cons(3, cons(4)))));
     });
 
-    it("doesn't create pairs (but lists)", function() {
+    it("trying to create pairs will fail, a list of two elements is still a list (a cons linked to a cons linked to nil)", function() {
       expect(list("1 2")).toEqual(cons(1, cons(2)));
     });
 
   });
 
-  describe('list functions', function() {
+  describe('the _print function is the opposite of the list function', function() {
 
-    it('_map returns a new list of the same length as the list passed in, the values have all gone through the passed in function', function() {
-      // expect(_map(function(a) { return a * a; }, list("1 2 3 4"))).toEqual(list("1 4 9 16"));
+    it("print returns strings of cons cells", function() {
+      expect("(1 2 3 4)").toEqual(_print(cons(1, cons(2, cons(3, cons(4))))));
+      expect("(10 20 30 40)").toEqual(_print(cons(10, cons(20, cons(30, cons(40))))));
+      expect("(1 2 3 4)").toEqual(_print(cons(1, cons(2, cons(3, cons(4))))));
+    });
+    
+    it("pairs have a special syntax, having a dot seperating the two values (the inbound dot in lisp is a shortcut for the outbound cons function)", function() {
+      expect("(1 . 2)").toEqual(_print(cons(1, 2)));
     });
 
   });
 
+
+  describe('some functions we have in lisp', function() {
+
+    describe('_map', function() {
+
+      it("the _map function transforms each element of a list given a transformer function", function() {
+        // expect(_map(function(a) { return a * a; }, list("1 2 3 4"))).toEqual(list("1 4 9 16"));
+      });
+
+    });
+  });
+
 });
-
-
-
-
-
-
-
-
