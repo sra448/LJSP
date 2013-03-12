@@ -18,5 +18,11 @@ getContentInBrackets = function(str) {
   }
 
   return resultString;
-
 };
+
+// stuff for strings
+
+isEmpty = function(str) {
+  return str === "" || str === undefined;
+}
+

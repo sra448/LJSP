@@ -45,15 +45,19 @@ caddr = function(list) {
 // a list is really only syntax sugar on top of cons cells
 // (list("1 2 3")) is equal to (cons(1, (const(2, 3)))
 
-list = function(lstString) {
-  var str = lstString.trim().replace(',', '').replace(/\'/g, '"'),
-      subListStr = getContentInBrackets(str),
-      firstValue = /^\(/.test(str) ?
-        list(subListStr) :
-        str.match(/^([^\(\ ]+)/)[1],
-      rest = str.split(consP(firstValue) ? '(' + subListStr + ')' : firstValue)[1];
+list = function(str, isInner) {
+  var listString = str.trim().replace(',', '').replace(/\'/g, '"'),
+      listStr = !isInner && /^\(.*\)$/.test(listString) ?
+        getContentInBrackets(listString) :
+        listString,
+      subListStr = getContentInBrackets(listStr),
+      firstValue = /^\(/.test(listStr) ?
+        list(subListStr, true) :
+        listStr.match(/^([^\(\ ]+)/)[1],
+      removeCurrentItemRegex = new RegExp('^' + (consP(firstValue) ? '(' + subListStr + ')' : firstValue) + '\ '),
+      rest = listStr.split(removeCurrentItemRegex)[1];
 
-  return cons((consP(firstValue) ? firstValue : JSON.parse(firstValue)), rest !== "" ? list(rest) : null);
+  return cons((consP(firstValue) ? firstValue : JSON.parse(firstValue)), !isEmpty(rest) ? list(rest, true) : null);
 };
 
 // our print function will make testing way more easy
@@ -81,7 +85,7 @@ _map = function(fn, list) {
 
   return (consP(rest) ?
     (cons(fn(first), _map(fn, rest))) :
-    (cons(fn(first), fn(rest)))
+    (cons(fn(first), (rest !== null ? fn(rest) : null)))
   );
 };
 
