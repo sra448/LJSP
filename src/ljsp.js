@@ -46,7 +46,7 @@ caddr = function(list) {
 // (list("1 2 3")) is equal to (cons(1, (const(2, 3)))
 
 list = function(str, isInner) {
-  var listString = str.trim().replace(',', '').replace(/\'/g, '"'),
+  var listString = str.trim().replace(',', ' ').replace(/\'/g, '"'),
       listStr = !isInner && /^\(.*\)$/.test(listString) ?
         getContentInBrackets(listString) :
         listString,

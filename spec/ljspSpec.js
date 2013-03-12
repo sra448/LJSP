@@ -19,6 +19,11 @@ describe("ljsp:", function() {
       expect(cdr(c)).toEqual(null);
     });
 
+    it("to test wheater or not something is a cons cell, use the consP function (p standing for predicate)", function() {
+      expect(consP(cons(1))).toEqual(true);
+      expect(consP(1)).toEqual(false);
+    })
+
     it("put another cons cell into the cdr and you get a list (or linked cons cell)", function() {
       var myList = cons(1, cons(2, cons(3, cons(4))));
 
