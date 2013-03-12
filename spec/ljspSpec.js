@@ -94,6 +94,15 @@ describe("ljsp:", function() {
       });
 
     });
+
+    describe('_reduce:', function() {
+
+      it("the reduce function reduces a list to a single value", function() {
+        expect(_reduce(function(mem, a) { return mem + a * 1000; }, list("1 2 3 4"))).toEqual(10000);
+      });
+
+    });
+
   });
 
 });

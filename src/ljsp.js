@@ -78,15 +78,32 @@ _print = function(lst, noBrackets) {
 // map accepts a function and a list to apply the function to
 // the function is the first argument, because we can use to ditch the list (later)
 
-_map = function(fn, list) {
-  var carTemp = car(list),
+_map = function(fn, lst) {
+  var carTemp = car(lst),
       first = (consP(carTemp) ? _map(fn, carTemp) : carTemp),
-      rest = cdr(list);
+      rest = cdr(lst);
 
   return (consP(rest) ?
     (cons(fn(first), _map(fn, rest))) :
     (cons(fn(first), (rest !== null ? fn(rest) : null)))
   );
+};
+
+// the reduce function takes a list and assembles one single value out of it,
+// given a function and a starting value. the function will be called once
+// for every item in the list, with the return value of the last call (with
+// the last item) as the first param (mem) and the actual item as the second
+
+_reduce = function(fn, lst, startValue) {
+  var carTemp = car(lst),
+      mem = consP(carTemp) ?
+        _reduce(fn, carTemp, startValue) :
+        fn(startValue || 0, carTemp),
+      rest = cdr(lst);
+
+  return (consP(rest) ?
+    _reduce(fn, rest, mem) :
+    mem);
 };
 
 // in functional programming there should be no sideeffects
