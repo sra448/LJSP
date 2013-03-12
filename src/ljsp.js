@@ -68,10 +68,10 @@ _print = function(lst, noBrackets) {
     consP(car(lst)) && consP(cdr(lst)) ?
       _print(car(lst)) + " " + _print(cdr(lst), true) :
       consP(car(lst)) ?
-        _print(car(lst)) + (cdr(lst) !== null ? " . " + cdr(lst) : "") :
+        _print(car(lst)) + (JSON.stringify(cdr(lst)) !== null ? " . " + JSON.stringify(cdr(lst)) : "") :
         consP(cdr(lst)) ?
-          car(lst) + " " + _print(cdr(lst), true) :
-          car(lst) + (cdr(lst) !== null ? " . " + cdr(lst) : "") :
+          JSON.stringify(car(lst)) + " " + _print(cdr(lst), true) :
+          JSON.stringify(car(lst)) + (cdr(lst) !== null ? " . " + JSON.stringify(cdr(lst)) : "") :
     "") + (noBrackets ? '' : ')');
 };
 

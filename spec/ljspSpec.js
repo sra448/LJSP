@@ -1,6 +1,6 @@
-describe("ljsp is a simple and stupid project to play with some lisp concepts in javascript", function() {
+describe("ljsp:", function() {
 
-  describe('the basic construct of lisp is the cons cell', function() {
+  describe('the basic construct of lisp is the cons cell:', function() {
 
     it('we can create cons cells using the cons (read: construct) function', function() {
       expect(cons(1, 2)).toEqual(cons(1, 2));
@@ -39,13 +39,13 @@ describe("ljsp is a simple and stupid project to play with some lisp concepts in
       expect(cddr(myList)).toEqual(cons(3, cons(4)));
     });
 
-    it("cons cells that dont link to another cons (in the cdr) are considered pairs", function() {
+    it("cons cells that contain two primitive types (as opposed to another cons cell in the cdr) are considered pairs", function() {
       expect(cons(1, 2)).toEqual(cons(1, 2));
     });
 
   });
 
-  describe('the list function takes a string and turns it into a list', function() {
+  describe('the list function takes a string and turns it into a list:', function() {
 
     it("it is syntaxtic sugar for not having to write too many conses yourself", function() {
       expect(list("1 2 3 4")).toEqual(cons(1, cons(2, cons(3, cons(4)))));
@@ -64,12 +64,17 @@ describe("ljsp is a simple and stupid project to play with some lisp concepts in
 
   });
 
-  describe('the _print function is the opposite of the list function', function() {
+  describe('the _print function is the opposite of the list function:', function() {
 
     it("print returns strings of cons cells", function() {
       expect("(1 2 3 4)").toEqual(_print(cons(1, cons(2, cons(3, cons(4))))));
       expect("(10 20 30 40)").toEqual(_print(cons(10, cons(20, cons(30, cons(40))))));
       expect("(1 2 3 4)").toEqual(_print(cons(1, cons(2, cons(3, cons(4))))));
+    });
+
+    it("like the list function, print is aware of datatypes, the way JSON is", function() {
+      expect("(1 2 3 4)").toEqual(_print(cons(1, cons(2, cons(3, cons(4))))));
+      expect('("1" "2" "3" "4")').toEqual(_print(cons('1', cons('2', cons('3', cons('4'))))));
     });
     
     it("pairs have a special syntax, having a dot seperating the two values (the inbound dot in lisp is a shortcut for the outbound cons function)", function() {
@@ -79,12 +84,13 @@ describe("ljsp is a simple and stupid project to play with some lisp concepts in
   });
 
 
-  describe('some functions we have in lisp', function() {
+  describe('some functions we have in lisp:', function() {
 
-    describe('_map', function() {
+    describe('_map:', function() {
 
       it("the _map function transforms each element of a list given a transformer function", function() {
-        // expect(_map(function(a) { return a * a; }, list("1 2 3 4"))).toEqual(list("1 4 9 16"));
+        expect(_map(function(a) { return a * a; }, list("1 2 3 4"))).toEqual(list("1 4 9 16"));
+        expect(_map(function(a) { return a + "foo"; }, list("1 2 3 4"))).toEqual(list("'1foo' '2foo' '3foo' '4foo'"));
       });
 
     });
