@@ -111,17 +111,17 @@ _reduce = function(fn, lst, startValue) {
 // a lot of time we have to pass in functions though,
 // because otherwise trueValue and falseValue would both be evaluated
 // everytime (which results in some serious hot cpu!).
-// we could either pass functions or just use ?: directly instead 
+// we could either pass functions or just use ?: directly instead
 
 _if = function(expr, trueValue, falseValue) {
   var trueValueFunctionP = typeof trueValue === "function",
       falseValueFunctionP = typeof falseValue === "function";
 
-  return expr ? 
+  return expr ?
     (trueValueFunctionP ?
       trueValue() :
       trueValue
-    ) : 
+    ) :
     (falseValueFunctionP ?
       falseValue() :
       falseValue
